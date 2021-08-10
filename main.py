@@ -5,6 +5,7 @@ import yfinance as yf
 from prophet import Prophet
 from prophet.plot import plot_plotly
 from plotly import graph_objs as go
+from mlalgos import show_ml_algos
 
 START = "2015-01-01"
 TODAY = date.today().strftime("%Y-%m-%d")
@@ -12,12 +13,13 @@ TODAY = date.today().strftime("%Y-%m-%d")
 st.title("Finance App")
 st.sidebar.title("Options")
 
-options = st.sidebar.selectbox("Which dashboard?", ("Detailed Prediction", "Short Term Prediction", "Patterns"))
+options = st.sidebar.selectbox("Which dashboard?", ("Stock Predictor", "Visualize some ML Algos", "Patterns"))
 st.header(options)
 
-if options == "Detailed Prediction":
-    stocks = ("AAPL", "GOOG", "MSFT", "SENS")
-    selected_stock = st.selectbox("Select stock to analyze", stocks)
+stocks = ("AAPL", "GOOG", "MSFT", "SENS")
+selected_stock = st.selectbox("Select stock to analyze", stocks)
+
+if options == "Stock Predictor":
 
     n_years = st.slider("Years of prediction", 1, 4)
     period = n_years * 365
@@ -64,4 +66,5 @@ if options == "Detailed Prediction":
     fig2 = m.plot_components(forecast)
     st.write(fig2)
 
-
+if options == "Visualize some ML Algos":
+    show_ml_algos(selected_stock)
