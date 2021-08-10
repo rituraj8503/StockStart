@@ -10,52 +10,58 @@ START = "2015-01-01"
 TODAY = date.today().strftime("%Y-%m-%d")
 
 st.title("Finance App")
+st.sidebar.title("Options")
 
-stocks = ("AAPL", "GOOG", "MSFT", "SENS")
-selected_stock = st.selectbox("Select stock to analyze", stocks)
+options = st.sidebar.selectbox("Which dashboard?", ("Detailed Prediction", "Short Term Prediction", "Patterns"))
+st.header(options)
 
-n_years = st.slider("Years of prediction", 1, 4)
-period = n_years * 365
+if options == "Detailed Prediction":
+    stocks = ("AAPL", "GOOG", "MSFT", "SENS")
+    selected_stock = st.selectbox("Select stock to analyze", stocks)
 
-@st.cache
-def load_data(ticker):
-    data = yf.download(ticker, START, TODAY)
-    data.reset_index(inplace=True)
-    return data
+    n_years = st.slider("Years of prediction", 1, 4)
+    period = n_years * 365
 
-data_load_state = st.text("Load data...")
-data = load_data(selected_stock)
-data_load_state.text("Loading data...done!")
+    @st.cache
+    def load_data(ticker):
+        data = yf.download(ticker, START, TODAY)
+        data.reset_index(inplace=True)
+        return data
 
-st.subheader("Raw Data")
-st.write(data.tail())
+    data_load_state = st.text("Load data...")
+    data = load_data(selected_stock)
+    data_load_state.text("Loading data...done!")
 
-def plot_raw_data():
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=data['Date'], y=data['Open'], name='stock_open'))
-    fig.add_trace(go.Scatter(x=data['Date'], y=data['Close'], name='stock_close')) 
-    fig.layout.update(title_text="Time Series Data", xaxis_rangeslider_visible=True)
-    st.plotly_chart(fig)
+    st.subheader("Raw Data")
+    st.write(data.tail())
 
-plot_raw_data()
+    def plot_raw_data():
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=data['Date'], y=data['Open'], name='stock_open'))
+        fig.add_trace(go.Scatter(x=data['Date'], y=data['Close'], name='stock_close')) 
+        fig.layout.update(title_text="Time Series Data", xaxis_rangeslider_visible=True)
+        st.plotly_chart(fig)
 
-#forecasting
+    plot_raw_data()
 
-df_train = data[['Date', 'Close']]
-df_train = df_train.rename(columns={"Date": "ds", "Close": "y"})
+    #forecasting
+    df_train = data[['Date', 'Close']]
+    df_train = df_train.rename(columns={"Date": "ds", "Close": "y"})
 
-m = Prophet()
-m.fit(df_train)
-future = m.make_future_dataframe(periods=period)
-forecast = m.predict (future)
+    m = Prophet()
+    m.fit(df_train)
+    future = m.make_future_dataframe(periods=period)
+    forecast = m.predict (future)
 
-st.subheader('Forecasted Data')
-st.write(forecast.tail())
+    st.subheader('Forecasted Data')
+    st.write(forecast.tail())
 
 
-st.write('Forecasted Data')
-fig1 = plot_plotly(m, forecast)
-st.plotly_chart(fig1)
-st.write("Forecast Components")
-fig2 = m.plot_components(forecast)
-st.write(fig2)
+    st.write('Forecasted Data')
+    fig1 = plot_plotly(m, forecast)
+    st.plotly_chart(fig1)
+    st.write("Forecast Components")
+    fig2 = m.plot_components(forecast)
+    st.write(fig2)
+
+
