@@ -75,11 +75,11 @@ def show_ml_algos(ticker):
     valid = playData[X.shape[0]:]
     valid['Prediction'] = predictions
     # print(valid)
-    print(data)
     fig1.add_trace(go.Scatter(x=data['Date'].tail(25), y=data['Close'].tail(25), name='actual'))
     fig1.add_trace(go.Scatter(x=data['Date'].tail(25), y=valid['Prediction'], name='tree_regressor'))
+    fig1.layout.update(xaxis_rangeslider_visible=True)
     # print(playData)
-
+    st.header("Tree Regressor Model")
     st.plotly_chart(fig1)
 
     fig2 = go.Figure()
@@ -88,5 +88,7 @@ def show_ml_algos(ticker):
     valid_lr['Prediction'] = predictions_two
     fig2.add_trace(go.Scatter(x=data['Date'].tail(25), y=data['Close'].tail(25), name='actual'))
     fig2.add_trace(go.Scatter(x=data['Date'].tail(25), y=valid_lr['Prediction'], name='linear_regression'))
+    fig2.layout.update(xaxis_rangeslider_visible=True)
+    st.header("Linear Regression Model")
     st.plotly_chart(fig2)
 

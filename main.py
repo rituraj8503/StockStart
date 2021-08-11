@@ -6,6 +6,8 @@ from prophet import Prophet
 from prophet.plot import plot_plotly
 from plotly import graph_objs as go
 from mlalgos import show_ml_algos
+from furtherstats import show_futher_stats
+from candlestick import candlestick
 
 START = "2015-01-01"
 TODAY = date.today().strftime("%Y-%m-%d")
@@ -13,7 +15,7 @@ TODAY = date.today().strftime("%Y-%m-%d")
 st.title("Finance App")
 st.sidebar.title("Options")
 
-options = st.sidebar.selectbox("Which dashboard?", ("Stock Predictor", "Visualize some ML Algos", "Patterns"))
+options = st.sidebar.selectbox("Which dashboard?", ("Stock Predictor", "Visualize Some Basic ML Algos", "Analyze Statistics", "Patterns"))
 st.header(options)
 
 stocks = ("AAPL", "GOOG", "MSFT", "SENS")
@@ -66,5 +68,12 @@ if options == "Stock Predictor":
     fig2 = m.plot_components(forecast)
     st.write(fig2)
 
-if options == "Visualize some ML Algos":
+if options == "Visualize Some Basic ML Algos":
     show_ml_algos(selected_stock)
+
+
+if options == "Analyze Statistics":
+    show_futher_stats(selected_stock)
+
+if options == "Patterns":
+    candlestick(selected_stock)
