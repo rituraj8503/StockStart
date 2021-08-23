@@ -1,0 +1,3 @@
+Interested in trading as a beginner? Try StockStart and get started with securities and the crucial information to analyze them...
+Try it out here: https://finance-app-2021.herokuapp.com/
+
